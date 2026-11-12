@@ -1,7 +1,8 @@
 theme: jekyll-theme-architect
 show_downloads: false
-title: Micro Frontends
-description: extending the microservice idea to frontend development
+lang: vi
+title: Micro Frontends
+description: mở rộng ý tưởng microservice sang phát triển frontend
 github:
   is_project_page: true
   repository_url: https://github.com/neuland/micro-frontends

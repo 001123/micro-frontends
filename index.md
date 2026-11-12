@@ -1,77 +1,77 @@
-Techniques, strategies and recipes for building a __modern web app__ with __multiple teams__ that can __ship features independently__.
+Kỹ thuật, chiến lược và công thức để xây dựng một __ứng dụng web hiện đại__ với __nhiều team__ có thể __phát hành tính năng một cách độc lập__.
 
-## What are Micro Frontends?
+## Micro Frontends là gì? {#what-are-micro-frontends}
 
-The term __Micro Frontends__ first came up in [ThoughtWorks Technology Radar](https://www.thoughtworks.com/radar/techniques/micro-frontends) at the end of 2016. It extends the concepts of micro services to the frontend world. The current trend is to build a feature-rich and powerful browser application, aka single page app, which sits on top of a micro service architecture. Over time the frontend layer, often developed by a separate team, grows and gets more difficult to maintain. That's what we call a [Frontend Monolith](https://www.youtube.com/watch?v=pU1gXA0rfwc).
+Thuật ngữ __Micro Frontends__ xuất hiện lần đầu trên [ThoughtWorks Technology Radar](https://www.thoughtworks.com/radar/techniques/micro-frontends) vào cuối năm 2016. Nó mở rộng khái niệm microservice sang thế giới frontend. Xu hướng hiện nay là xây dựng một ứng dụng trình duyệt mạnh mẽ, giàu tính năng, hay còn gọi là single page app (SPA), nằm trên một kiến trúc microservice. Theo thời gian, tầng frontend — thường do một team riêng phát triển — ngày càng phình to và khó bảo trì hơn. Đó là thứ chúng tôi gọi là [Frontend Monolith](https://www.youtube.com/watch?v=pU1gXA0rfwc).
 
-The idea behind Micro Frontends is to think about a website or web app as __a composition of features__ which are owned by __independent teams__. Each team has a __distinct area of business__ or __mission__ it cares about and specialises in. A team is __cross functional__ and develops its features __end-to-end__, from database to user interface.
+Ý tưởng đằng sau Micro Frontends là coi một website hay ứng dụng web như __một tập hợp các tính năng__ được sở hữu bởi __các team độc lập__. Mỗi team có một __mảng nghiệp vụ__ hoặc __sứ mệnh riêng biệt__ mà họ quan tâm và chuyên sâu. Một team là __đa chức năng (cross functional)__ và phát triển tính năng của mình __từ đầu đến cuối (end-to-end)__, từ cơ sở dữ liệu cho đến giao diện người dùng.
 
-However, this idea is not new. It has a lot in common with the [Self-contained Systems](http://scs-architecture.org/) concept. In the past approaches like this went by the name of [Frontend Integration for Verticalised Systems](https://www.otto.de/jobs/en/technology/techblog/blogpost/architecture-principles-2013-04-15.php). But Micro Frontends is clearly a more friendly and less bulky term.
+Tuy nhiên, ý tưởng này không mới. Nó có nhiều điểm chung với khái niệm [Self-contained Systems](http://scs-architecture.org/). Trước đây, những cách tiếp cận như vậy được gọi là [Frontend Integration for Verticalised Systems](https://www.otto.de/jobs/en/technology/techblog/blogpost/architecture-principles-2013-04-15.php). Nhưng rõ ràng Micro Frontends là một cái tên thân thiện và gọn gàng hơn.
 
-__Monolithic Frontends__
-<img alt="Monolithic Frontends" src="./ressources/diagrams/organisational/monolith-frontback-microservices.png" loading="lazy" />
+__Frontend nguyên khối (Monolithic Frontends)__
+<img alt="Frontend nguyên khối" src="./ressources/diagrams/organisational/monolith-frontback-microservices.png" loading="lazy" />
 
 
-__Organisation in Verticals__
-<img alt="End-To-End Teams with Micro Frontends" src="./ressources/diagrams/organisational/verticals-headline.png" loading="lazy" />
+__Tổ chức theo chiều dọc (Verticals)__
+<img alt="Team end-to-end với Micro Frontends" src="./ressources/diagrams/organisational/verticals-headline.png" loading="lazy" />
 
-## What's a Modern Web App?
+## Thế nào là một ứng dụng web hiện đại? {#whats-a-modern-web-app}
 
-In the introduction I've used the phrase "building a modern web app". Let's define the assumptions that are connected with this term.
+Ở phần giới thiệu, tôi đã dùng cụm từ "xây dựng một ứng dụng web hiện đại". Hãy cùng định nghĩa những giả định gắn liền với thuật ngữ này.
 
-To put this into a broader perspective, [Aral Balkan](https://ar.al/) has written a blog post about what he calls the [Documents‐to‐Applications Continuum](https://ar.al/notes/the-documents-to-applications-continuum/). He comes up with the concept of a sliding scale where a site, built out of __static documents__, connected via links, is __on the left__ end and a pure behaviour driven, __contentless application__ like an online photo editor is __on the right__.
+Để nhìn ở góc độ rộng hơn, [Aral Balkan](https://ar.al/) đã viết một bài blog về thứ mà anh gọi là [Documents‐to‐Applications Continuum](https://ar.al/notes/the-documents-to-applications-continuum/) (dải liên tục từ tài liệu đến ứng dụng). Anh đưa ra khái niệm về một thang trượt, trong đó một trang web được xây dựng từ __các tài liệu tĩnh__, liên kết với nhau qua đường link, nằm ở __đầu bên trái__, còn một __ứng dụng thuần hành vi, không có nội dung__ như trình chỉnh sửa ảnh trực tuyến thì nằm ở __đầu bên phải__.
 
-If you would position your project on the __left side of this spectrum__, an __integration on webserver level__ is a good fit. With this model a server collects and __concatenates HTML strings__ from all components that make up the page requested by the user. Updates are done by reloading the page from the server or replacing parts of it via ajax. [Gustaf Nilsson Kotte](https://twitter.com/gustaf_nk/) has written a [comprehensive article](https://gustafnk.github.io/microservice-websites/) on this topic.
+Nếu dự án của bạn nằm ở __phía bên trái của dải này__, thì __tích hợp ở tầng web server__ là lựa chọn phù hợp. Với mô hình này, server thu thập và __nối các chuỗi HTML__ từ tất cả các component tạo nên trang mà người dùng yêu cầu. Việc cập nhật được thực hiện bằng cách tải lại trang từ server hoặc thay thế một phần trang qua ajax. [Gustaf Nilsson Kotte](https://twitter.com/gustaf_nk/) đã viết một [bài viết chi tiết](https://gustafnk.github.io/microservice-websites/) về chủ đề này.
 
-When your user interface has to provide __instant feedback__, even on unreliable connections, a pure server rendered site is not sufficient anymore. To implement techniques like [Optimistic UI](https://www.smashingmagazine.com/2016/11/true-lies-of-optimistic-user-interfaces/) or [Skeleton Screens](http://www.lukew.com/ff/entry.asp?1797) you need to be able to also __update__ your UI __on the device itself__. Google's term [Progressive Web Apps](https://developers.google.com/web/progressive-web-apps/) aptly describes the __balancing act__ of being a good citizen of the web (progressive enhancement) while also providing app-like performance. This kind of application is located somewhere __around the middle of the site-app-continuum__. Here a solely server based solution is not sufficient anymore. We have to move the __integration into the browser__, and this is the focus of this article.
+Khi giao diện của bạn cần cung cấp __phản hồi tức thì__, kể cả trên kết nối mạng không ổn định, thì một trang chỉ render trên server là không còn đủ nữa. Để triển khai các kỹ thuật như [Optimistic UI](https://www.smashingmagazine.com/2016/11/true-lies-of-optimistic-user-interfaces/) hay [Skeleton Screens](http://www.lukew.com/ff/entry.asp?1797), bạn cần có khả năng __cập nhật__ giao diện __ngay trên thiết bị__. Thuật ngữ [Progressive Web Apps](https://developers.google.com/web/progressive-web-apps/) của Google mô tả rất chính xác __sự cân bằng__ giữa việc trở thành một công dân tốt của web (progressive enhancement) đồng thời mang lại hiệu năng giống như một ứng dụng. Loại ứng dụng này nằm đâu đó __quanh khu vực giữa của dải site-app__. Ở đây, một giải pháp chỉ dựa vào server là không còn đủ. Chúng ta phải chuyển __việc tích hợp vào trình duyệt__, và đó là trọng tâm của bài viết này.
 
-## Core Ideas behind Micro Frontends
+## Các ý tưởng cốt lõi của Micro Frontends {#core-ideas-behind-micro-frontends}
 
-* __Be Technology Agnostic__<br>Each team should be able to choose and upgrade their stack without having to coordinate with other teams. [Custom Elements](#the-dom-is-the-api) are a great way to hide implementation details while providing a neutral interface to others.
-* __Isolate Team Code__<br>Don’t share a runtime, even if all teams use the same framework. Build independent apps that are self contained. Don't rely on shared state or global variables.
-* __Establish Team Prefixes__<br>Agree on naming conventions where isolation is not possible yet. Namespace CSS, Events, Local Storage and Cookies to avoid collisions and clarify ownership.
-* __Favor Native Browser Features over Custom APIs__<br>Use [Browser Events for communication](#parent-child-communication--dom-modification) instead of building a global PubSub system. If you really have to build a cross-team API, try keeping it as simple as possible.
-* __Build a Resilient Site__<br>Your feature should be useful, even if JavaScript failed or hasn't executed yet. Use [Universal Rendering](#server-side-rendering--universal-rendering) and Progressive Enhancement to improve perceived performance.
+* __Không phụ thuộc công nghệ__<br>Mỗi team nên có thể tự chọn và nâng cấp stack của mình mà không cần phối hợp với các team khác. [Custom Elements](#the-dom-is-the-api) là một cách tuyệt vời để che giấu chi tiết triển khai trong khi vẫn cung cấp một giao diện trung lập cho những team khác.
+* __Cô lập code của từng team__<br>Đừng chia sẻ runtime, kể cả khi tất cả các team dùng chung một framework. Hãy xây dựng các ứng dụng độc lập, tự chứa (self contained). Đừng dựa vào state dùng chung hay biến toàn cục.
+* __Thiết lập tiền tố cho từng team__<br>Thống nhất quy ước đặt tên ở những chỗ chưa thể cô lập. Đặt namespace cho CSS, Events, Local Storage và Cookies để tránh xung đột và làm rõ quyền sở hữu.
+* __Ưu tiên tính năng gốc của trình duyệt thay vì API tự chế__<br>Dùng [Browser Events để giao tiếp](#parent-child-communication--dom-modification) thay vì xây dựng một hệ thống PubSub toàn cục. Nếu thực sự phải xây dựng một API giữa các team, hãy cố giữ nó đơn giản nhất có thể.
+* __Xây dựng một trang web bền bỉ (resilient)__<br>Tính năng của bạn nên hữu ích kể cả khi JavaScript bị lỗi hoặc chưa được thực thi. Hãy dùng [Universal Rendering](#server-side-rendering--universal-rendering) và Progressive Enhancement để cải thiện hiệu năng cảm nhận được.
 
 ---
 
-## The DOM is the API
+## DOM chính là API {#the-dom-is-the-api}
 
-[Custom Elements](https://developers.google.com/web/fundamentals/getting-started/primers/customelements), the interoperability aspect from the Web Components Spec, are a good primitive for integration in the browser. Each team builds their component __using their web technology of choice__ and __wraps it inside a Custom Element__ (e.g. `<order-minicart></order-minicart>`). The DOM specification of this particular element (tag-name, attributes & events) acts as the contract or public API for other teams. The advantage is that they can use the component and its functionality without having to know the implementation. They just have to be able to interact with the DOM.
+[Custom Elements](https://developers.google.com/web/fundamentals/getting-started/primers/customelements) — khía cạnh về khả năng tương tác trong đặc tả Web Components — là một nền tảng tốt cho việc tích hợp trong trình duyệt. Mỗi team xây dựng component của mình __bằng công nghệ web mà họ chọn__ và __bọc nó trong một Custom Element__ (ví dụ: `<order-minicart></order-minicart>`). Đặc tả DOM của element này (tên thẻ, thuộc tính & sự kiện) đóng vai trò là hợp đồng hay API công khai cho các team khác. Ưu điểm là họ có thể sử dụng component và chức năng của nó mà không cần biết cách triển khai. Họ chỉ cần có khả năng tương tác với DOM.
 
-But Custom Elements alone are not the solution to all our needs. To address progressive enhancement, universal rendering or routing we need additional pieces of software.
+Nhưng chỉ Custom Elements thôi thì không giải quyết được mọi nhu cầu. Để xử lý progressive enhancement, universal rendering hay routing, chúng ta cần thêm những thành phần phần mềm khác.
 
-This page is divided into two main areas. First we will discuss [Page Composition](#page-composition) - how to assemble a page out of components owned by different teams. After that we'll show examples for implementing client-side [Page Transition](#navigating-between-pages).
+Trang này được chia thành hai phần chính. Đầu tiên chúng ta sẽ bàn về [Ghép trang (Page Composition)](#page-composition) — cách lắp ráp một trang từ các component thuộc sở hữu của các team khác nhau. Sau đó chúng tôi sẽ đưa ra ví dụ triển khai [chuyển trang (Page Transition)](#navigating-between-pages) phía client.
 
-## Page Composition
+## Ghép trang (Page Composition) {#page-composition}
 
-Beside the __client-__ and __server-side__ integration of code written in __different frameworks__ itself, there are a lot of side topics that should be discussed: mechanisms to __isolate js__, __avoid css conflicts__, __load resources__ as needed, __share common resources__ between teams, handle __data fetching__ and think about good __loading states__ for the user. We'll go into these topics one step at a time.
+Bên cạnh việc tích hợp __phía client__ và __phía server__ cho code được viết bằng __các framework khác nhau__, còn rất nhiều chủ đề phụ cần được thảo luận: cơ chế __cô lập js__, __tránh xung đột css__, __tải tài nguyên__ khi cần, __chia sẻ tài nguyên chung__ giữa các team, xử lý __lấy dữ liệu (data fetching)__ và suy nghĩ về __trạng thái loading__ tốt cho người dùng. Chúng ta sẽ đi qua từng chủ đề một.
 
-### The Base Prototype
+### Bản prototype cơ bản {#the-base-prototype}
 
-The product page of this model tractor store will serve as the basis for the following examples.
+Trang sản phẩm của cửa hàng máy kéo mô hình này sẽ là nền tảng cho các ví dụ tiếp theo.
 
-It features a __variant selector__ to switch between the three different tractor models. On change product image, name, price and recommendations are updated. There is also a __buy button__, which adds the selected variant to the basket and a __mini basket__ at the top that updates accordingly.
+Nó có một __bộ chọn biến thể (variant selector)__ để chuyển đổi giữa ba mẫu máy kéo khác nhau. Khi thay đổi, hình ảnh sản phẩm, tên, giá và các gợi ý sẽ được cập nhật. Ngoài ra còn có một __nút mua__, dùng để thêm biến thể đã chọn vào giỏ hàng, và một __giỏ hàng mini__ ở phía trên được cập nhật tương ứng.
 
-[![Example 0 - Product Page - Plain JS](./ressources/video/model-store-0.gif)](./0-model-store/)
+[![Ví dụ 0 - Trang sản phẩm - Plain JS](./ressources/video/model-store-0.gif)](./0-model-store/)
 
-[try in browser](./0-model-store/) & [inspect the code](https://github.com/neuland/micro-frontends/tree/master/0-model-store)
+[chạy thử trên trình duyệt](./0-model-store/) & [xem code](https://github.com/neuland/micro-frontends/tree/master/0-model-store)
 
-All HTML is generated client side using __plain JavaScript__ and ES6 Template Strings with __no dependencies__. The code uses a simple state/markup separation and re-renders the entire HTML client side on every change - no fancy DOM diffing and __no universal rendering__ for now. Also __no team separation__ - [the code](https://github.com/neuland/micro-frontends/tree/master/0-model-store) is written in one js/css file.
+Toàn bộ HTML được tạo ở phía client bằng __JavaScript thuần__ và ES6 Template Strings, __không có thư viện phụ thuộc__. Code sử dụng cách tách state/markup đơn giản và render lại toàn bộ HTML phía client mỗi khi có thay đổi — không có DOM diffing phức tạp và tạm thời __chưa có universal rendering__. Cũng __chưa tách theo team__ — [toàn bộ code](https://github.com/neuland/micro-frontends/tree/master/0-model-store) được viết trong một file js/css.
 
-### Client-side Integration
+### Tích hợp phía client {#client-side-integration}
 
-In this example, the page is split into separate components/fragments owned by three teams. __Team Checkout__ (blue) is now responsible for everything regarding the purchasing process - namely the __buy button__ and __mini basket__. __Team Inspire__ (green) manages the __product recommendations__ on this page. The page itself is owned by __Team Product__ (red).
+Trong ví dụ này, trang được chia thành các component/fragment riêng biệt thuộc sở hữu của ba team. __Team Checkout__ (xanh dương) giờ chịu trách nhiệm cho mọi thứ liên quan đến quy trình mua hàng — cụ thể là __nút mua__ và __giỏ hàng mini__. __Team Inspire__ (xanh lá) quản lý phần __gợi ý sản phẩm__ trên trang này. Bản thân trang thuộc sở hữu của __Team Product__ (đỏ).
 
-[![Example 1 - Product Page - Composition](./ressources/screen/three-teams.png)](./1-composition-client-only/)
+[![Ví dụ 1 - Trang sản phẩm - Composition](./ressources/screen/three-teams.png)](./1-composition-client-only/)
 
-[try in browser](./1-composition-client-only/) & [inspect the code](https://github.com/neuland/micro-frontends/tree/master/1-composition-client-only)
+[chạy thử trên trình duyệt](./1-composition-client-only/) & [xem code](https://github.com/neuland/micro-frontends/tree/master/1-composition-client-only)
 
-__Team Product__ decides which functionality is included and where it is positioned in the layout. The page contains information that can be provided by Team Product itself, like the product name, image and the available variants. But it also includes fragments (Custom Elements) from the other teams.
+__Team Product__ quyết định chức năng nào được đưa vào và đặt ở đâu trong layout. Trang chứa những thông tin mà Team Product có thể tự cung cấp, như tên sản phẩm, hình ảnh và các biến thể có sẵn. Nhưng nó cũng chứa các fragment (Custom Elements) từ các team khác.
 
-### How to Create a Custom Element?
+### Làm thế nào để tạo một Custom Element? {#how-to-create-a-custom-element}
 
-Lets take the __buy button__ as an example. Team Product includes the button simply adding `<blue-buy sku="t_porsche"></blue-buy>` to the desired position in the markup. For this to work, Team Checkout has to register the element `blue-buy` on the page.
+Hãy lấy __nút mua__ làm ví dụ. Team Product chèn nút này đơn giản bằng cách thêm `<blue-buy sku="t_porsche"></blue-buy>` vào vị trí mong muốn trong markup. Để điều này hoạt động, Team Checkout phải đăng ký element `blue-buy` trên trang.
 
     class BlueBuy extends HTMLElement {
       connectedCallback() {
@@ -83,31 +83,31 @@ Lets take the __buy button__ as an example. Team Product includes the button sim
     }
     window.customElements.define('blue-buy', BlueBuy);
 
-Now every time the browser comes across a new `blue-buy` tag, the `connectedCallback` is called. `this` is the reference to the root DOM node of the custom element. All properties and methods of a standard DOM element like `innerHTML` or `getAttribute()` can be used.
+Giờ đây, mỗi khi trình duyệt gặp một thẻ `blue-buy` mới, `connectedCallback` sẽ được gọi. `this` là tham chiếu tới node DOM gốc của custom element. Mọi thuộc tính và phương thức của một DOM element tiêu chuẩn như `innerHTML` hay `getAttribute()` đều có thể sử dụng.
 
-<img alt="Custom Element in Action" src="./ressources/video/custom-element.gif" loading="lazy" />
+<img alt="Custom Element hoạt động" src="./ressources/video/custom-element.gif" loading="lazy" />
 
-When naming your element the only requirement the spec defines is that the name must __include a dash (-)__ to maintain compatibility with upcoming new HTML tags. In the upcoming examples the naming convention `[team_color]-[feature]` is used. The team namespace guards against collisions and this way the ownership of a feature becomes obvious, simply by looking at the DOM.
+Khi đặt tên cho element, yêu cầu duy nhất mà đặc tả đưa ra là tên phải __chứa dấu gạch ngang (-)__ để duy trì khả năng tương thích với các thẻ HTML mới trong tương lai. Trong các ví dụ sắp tới, quy ước đặt tên `[màu_team]-[tính_năng]` được sử dụng. Namespace của team giúp tránh xung đột, và theo cách này quyền sở hữu một tính năng trở nên rõ ràng chỉ bằng cách nhìn vào DOM.
 
-### Parent-Child Communication / DOM Modification
+### Giao tiếp cha-con / Thay đổi DOM {#parent-child-communication--dom-modification}
 
-When the user selects another tractor in the __variant selector__, the __buy button has to be updated__ accordingly. To achieve this Team Product can simply __remove__ the existing element from the DOM __and insert__ a new one.
+Khi người dùng chọn một máy kéo khác trong __bộ chọn biến thể__, __nút mua phải được cập nhật__ tương ứng. Để làm điều này, Team Product có thể đơn giản __xoá__ element hiện có khỏi DOM __và chèn__ một element mới.
 
     container.innerHTML;
     // => <blue-buy sku="t_porsche">...</blue-buy>
     container.innerHTML = '<blue-buy sku="t_fendt"></blue-buy>';
 
-The `disconnectedCallback` of the old element gets invoked synchronously to provide the element with the chance to clean up things like event listeners. After that the `connectedCallback` of the newly created `t_fendt` element is called.
+`disconnectedCallback` của element cũ được gọi đồng bộ để element có cơ hội dọn dẹp những thứ như event listener. Sau đó `connectedCallback` của element `t_fendt` mới được tạo sẽ được gọi.
 
-Another more performant option is to just update the `sku` attribute on the existing element.
+Một lựa chọn khác hiệu năng tốt hơn là chỉ cập nhật thuộc tính `sku` trên element hiện có.
 
     document.querySelector('blue-buy').setAttribute('sku', 't_fendt');
 
-If Team Product used a templating engine that features DOM diffing, like React, this would be done by the algorithm automatically.
+Nếu Team Product sử dụng một template engine có DOM diffing, như React, thì việc này sẽ được thuật toán thực hiện tự động.
 
-<img alt="Custom Element Attribute Change" src="./ressources/video/custom-element-attribute.gif" loading="lazy" />
+<img alt="Thay đổi thuộc tính Custom Element" src="./ressources/video/custom-element-attribute.gif" loading="lazy" />
 
-To support this the Custom Element can implement the `attributeChangedCallback` and specify a list of `observedAttributes` for which this callback should be triggered.
+Để hỗ trợ điều này, Custom Element có thể triển khai `attributeChangedCallback` và chỉ định danh sách `observedAttributes` mà callback này sẽ được kích hoạt.
 
     const prices = {
       t_porsche: '66,00 €',
@@ -137,30 +137,30 @@ To support this the Custom Element can implement the `attributeChangedCallback` 
     }
     window.customElements.define('blue-buy', BlueBuy);
 
-To avoid duplication a `render()` method is introduced which is called from `connectedCallback` and `attributeChangedCallback`. This method collects needed data and innerHTML's the new markup. When deciding to go with a more sophisticated templating engine or framework inside the Custom Element, this is the place where its initialisation code would go.
+Để tránh trùng lặp, một phương thức `render()` được thêm vào và được gọi từ `connectedCallback` và `attributeChangedCallback`. Phương thức này thu thập dữ liệu cần thiết và gán markup mới vào innerHTML. Nếu bạn quyết định dùng một template engine hay framework phức tạp hơn bên trong Custom Element, thì đây là nơi đặt code khởi tạo của nó.
 
-### Browser Support
+### Hỗ trợ trình duyệt {#browser-support}
 
-The above example uses the Custom Element Spec which is [supported by all modern browsers](http://caniuse.com/#feat=custom-elementsv1). No polyfills or hacks are needed.
-The same is true for [Shadow DOM](https://caniuse.com/shadowdomv1), which is used to encapsulate the Custom Element's markup and styles.
+Ví dụ trên sử dụng đặc tả Custom Element, vốn [được hỗ trợ bởi tất cả trình duyệt hiện đại](http://caniuse.com/#feat=custom-elementsv1). Không cần polyfill hay hack nào cả.
+Điều tương tự cũng đúng với [Shadow DOM](https://caniuse.com/shadowdomv1), được dùng để đóng gói markup và style của Custom Element.
 
-### Framework Compatibility
+### Tương thích với framework {#framework-compatibility}
 
-Because Custom Elements are a web standard, all major JavaScript frameworks like React, Vue, Angular, Svelte or Preact support them.
-They allow you to embed a Custom Element in your application just like a native HTML tag, and they also provide ways to publish your framework-specific application as a Custom Element.
+Vì Custom Elements là một chuẩn web, tất cả các framework JavaScript lớn như React, Vue, Angular, Svelte hay Preact đều hỗ trợ chúng.
+Chúng cho phép bạn nhúng một Custom Element vào ứng dụng giống như một thẻ HTML gốc, đồng thời cung cấp cách để xuất bản ứng dụng viết bằng framework của bạn dưới dạng một Custom Element.
 
-### Avoid Framework Anarchy
+### Tránh hỗn loạn framework {#avoid-framework-anarchy}
 
-Using Custom Elements is a great way to achieve a high amount of decoupling between the fragments of the individual teams. This way, each team is free to pick the frontend framework of their choice. But just because you can does not mean that it's a wise idea to mix different technologies. Try to avoid [Micro Frontends Anarchy](https://www.thoughtworks.com/radar/techniques/micro-frontend-anarchy) and create a reasonable level of alignment between the various teams. This way, teams can share learning and best practices with each other. It will also make your life easier when you want to establish a central pattern library.
-That said, the capability of mixing technologies can be handy when you're working with a legacy application and want to migrate to a new tech stack.
+Sử dụng Custom Elements là một cách tuyệt vời để đạt được mức độ tách rời (decoupling) cao giữa các fragment của từng team. Bằng cách này, mỗi team được tự do chọn framework frontend mà họ muốn. Nhưng không phải cứ làm được là nên trộn lẫn nhiều công nghệ khác nhau. Hãy cố tránh [Micro Frontends Anarchy](https://www.thoughtworks.com/radar/techniques/micro-frontend-anarchy) và tạo ra mức độ thống nhất hợp lý giữa các team. Nhờ vậy, các team có thể chia sẻ kiến thức và best practice với nhau. Nó cũng giúp bạn dễ dàng hơn khi muốn xây dựng một pattern library chung.
+Dù vậy, khả năng kết hợp nhiều công nghệ có thể rất hữu ích khi bạn làm việc với một ứng dụng legacy và muốn chuyển đổi sang một tech stack mới.
 
-### Child-Parent or Siblings Communication / DOM Events
+### Giao tiếp con-cha hoặc giữa các anh em / DOM Events {#child-parent-or-siblings-communication--dom-events}
 
-But passing down attributes is not sufficient for all interactions. In our example the __mini basket should refresh__ when the user performs a __click on the buy button__.
+Nhưng việc truyền thuộc tính xuống là không đủ cho mọi tương tác. Trong ví dụ của chúng ta, __giỏ hàng mini cần được làm mới__ khi người dùng __click vào nút mua__.
 
-Both fragments are owned by Team Checkout (blue), so they could build some kind of internal JavaScript API that lets the mini basket know when the button was pressed. But this would require the component instances to know each other and would also be an isolation violation.
+Cả hai fragment đều thuộc sở hữu của Team Checkout (xanh dương), nên họ có thể xây dựng một kiểu API JavaScript nội bộ để giỏ hàng mini biết khi nào nút được bấm. Nhưng điều này đòi hỏi các instance component phải biết về nhau và cũng vi phạm nguyên tắc cô lập.
 
-A cleaner way is to use a PubSub mechanism, where a component can publish a message and other components can subscribe to specific topics. Luckily browsers have this feature built-in. This is exactly how browser events like `click`, `select` or `mouseover` work. In addition to native events there is also the possibility to create higher level events with `new CustomEvent(...)`. Events are always tied to the DOM node they were created/dispatched on. Most native events also feature bubbling. This makes it possible to listen for all events on a specific sub-tree of the DOM. If you want to listen to all events on the page, attach the event listener to the window element. Here is how the creation of the `blue:basket:changed`-event looks in the example:
+Một cách gọn gàng hơn là sử dụng cơ chế PubSub, trong đó một component có thể publish một message và các component khác có thể subscribe vào các topic cụ thể. May mắn là trình duyệt đã tích hợp sẵn tính năng này. Đây chính xác là cách các sự kiện trình duyệt như `click`, `select` hay `mouseover` hoạt động. Ngoài các sự kiện gốc, còn có khả năng tạo các sự kiện cấp cao hơn bằng `new CustomEvent(...)`. Sự kiện luôn gắn với node DOM nơi chúng được tạo/dispatch. Hầu hết các sự kiện gốc cũng hỗ trợ bubbling (nổi bọt). Điều này giúp có thể lắng nghe mọi sự kiện trên một cây con cụ thể của DOM. Nếu bạn muốn lắng nghe mọi sự kiện trên trang, hãy gắn event listener vào element window. Dưới đây là cách tạo sự kiện `blue:basket:changed` trong ví dụ:
 
     class BlueBuy extends HTMLElement {
       [...]
@@ -170,7 +170,7 @@ A cleaner way is to use a PubSub mechanism, where a component can publish a mess
         this.shadowRoot.querySelector('button').addEventListener('click', this.addToCart);
       }
       addToCart() {
-        // maybe talk to an api
+        // có thể gọi tới một api
         this.dispatchEvent(new CustomEvent('blue:basket:changed', {
           bubbles: true,
         }));
@@ -186,7 +186,7 @@ A cleaner way is to use a PubSub mechanism, where a component can publish a mess
       }
     }
 
-The mini basket can now subscribe to this event on `window` and get notified when it should refresh its data.
+Giờ đây giỏ hàng mini có thể subscribe sự kiện này trên `window` và được thông báo khi cần làm mới dữ liệu.
 
     class BlueBasket extends HTMLElement {
       connectedCallback() {
@@ -194,14 +194,14 @@ The mini basket can now subscribe to this event on `window` and get notified whe
         window.addEventListener('blue:basket:changed', this.refresh);
       }
       refresh() {
-        // fetch new data and render it
+        // lấy dữ liệu mới và render
       }
       disconnectedCallback() {
         window.removeEventListener('blue:basket:changed', this.refresh);
       }
     }
 
-With this approach the mini basket fragment adds a listener to a DOM element which is outside its scope (`window`). This should be ok for many applications, but if you are uncomfortable with this you could also implement an approach where the page itself (Team Product) listens to the event and notifies the mini basket by calling `refresh()` on the DOM element.
+Với cách tiếp cận này, fragment giỏ hàng mini thêm một listener vào một DOM element nằm ngoài phạm vi của nó (`window`). Điều này ổn với nhiều ứng dụng, nhưng nếu bạn không thoải mái với nó, bạn cũng có thể triển khai cách tiếp cận trong đó chính trang (Team Product) lắng nghe sự kiện và thông báo cho giỏ hàng mini bằng cách gọi `refresh()` trên DOM element.
 
     // page.js
     const $ = document.getElementsByTagName;
@@ -210,28 +210,28 @@ With this approach the mini basket fragment adds a listener to a DOM element whi
       $('blue-basket')[0].refresh();
     });
 
-Imperatively calling DOM methods is quite uncommon, but can be found in [video element api](https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement#methods) for example. If possible the use of the declarative approach (attribute change) should be preferred.
+Việc gọi các phương thức DOM theo kiểu mệnh lệnh (imperative) khá hiếm gặp, nhưng có thể thấy ví dụ trong [API của video element](https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement#methods). Nếu có thể, nên ưu tiên cách tiếp cận khai báo (declarative — thay đổi thuộc tính).
 
-## Server-side Rendering / Universal Rendering
+## Render phía server / Universal Rendering {#server-side-rendering--universal-rendering}
 
-Custom Elements are great for integrating components inside the browser. But when building a site that is accessible on the web, chances are that initial load performance matters and users will see a white screen until all js frameworks are downloaded and executed. Additionally, it's good to think about what happens to the site if the JavaScript fails or is blocked. [Jeremy Keith](https://adactio.com/) explains the importance in his ebook/podcast [Resilient Web Design](https://resilientwebdesign.com/). Therefore the ability to render the core content on the server is key. Sadly the web component spec does not talk about server rendering at all. No JavaScript, no Custom Elements :(
+Custom Elements rất tuyệt để tích hợp component bên trong trình duyệt. Nhưng khi xây dựng một trang web có thể truy cập trên internet, nhiều khả năng hiệu năng tải lần đầu sẽ quan trọng và người dùng sẽ thấy màn hình trắng cho đến khi tất cả framework js được tải về và thực thi. Ngoài ra, nên suy nghĩ về điều gì xảy ra với trang nếu JavaScript bị lỗi hoặc bị chặn. [Jeremy Keith](https://adactio.com/) giải thích tầm quan trọng của điều này trong ebook/podcast [Resilient Web Design](https://resilientwebdesign.com/) của anh. Vì vậy, khả năng render nội dung cốt lõi trên server là then chốt. Đáng tiếc là đặc tả web component hoàn toàn không đề cập đến việc render phía server. Không có JavaScript, không có Custom Elements :(
 
-### Custom Elements + Server Side Includes = ❤️
+### Custom Elements + Server Side Includes = ❤️ {#custom-elements--server-side-includes}
 
-To make server rendering work, the previous example is refactored. Each team has their own express server and the `render()` method of the Custom Element is also accessible via url.
+Để render phía server hoạt động, ví dụ trước được tái cấu trúc. Mỗi team có express server riêng và phương thức `render()` của Custom Element cũng có thể truy cập qua url.
 
     $ curl http://127.0.0.1:3000/blue-buy?sku=t_porsche
     <button type="button">buy for 66,00 €</button>
 
-The Custom Element tag name is used as the path name - attributes become query parameters. Now there is a way to server-render the content of every component. In combination with the `<blue-buy>`-Custom Elements something that is quite close to a __Universal Web Component__ is achieved:
+Tên thẻ của Custom Element được dùng làm đường dẫn — các thuộc tính trở thành query parameter. Giờ đã có cách để render nội dung của mọi component phía server. Kết hợp với Custom Element `<blue-buy>`, ta đạt được một thứ khá gần với __Universal Web Component__:
 
     <blue-buy sku="t_porsche">
       <!--#include virtual="/blue-buy?sku=t_porsche" -->
     </blue-buy>
 
-The `#include` comment is part of [Server Side Includes](https://en.wikipedia.org/wiki/Server_Side_Includes), which is a feature that is available in most web servers. Yes, it's the same technique used back in the days to embed the current date on our web sites. There are also a few alternative techniques like [ESI](https://en.wikipedia.org/wiki/Edge_Side_Includes), [nodesi](https://github.com/Schibsted-Tech-Polska/nodesi), [compoxure](https://github.com/tes/compoxure) and [tailor](https://github.com/zalando/tailor), but for our projects SSI has proven itself as a simple and incredibly stable solution.
+Comment `#include` là một phần của [Server Side Includes](https://en.wikipedia.org/wiki/Server_Side_Includes), một tính năng có sẵn trong hầu hết các web server. Vâng, đây chính là kỹ thuật ngày xưa dùng để nhúng ngày hiện tại vào trang web. Cũng có một vài kỹ thuật thay thế như [ESI](https://en.wikipedia.org/wiki/Edge_Side_Includes), [nodesi](https://github.com/Schibsted-Tech-Polska/nodesi), [compoxure](https://github.com/tes/compoxure) và [tailor](https://github.com/zalando/tailor), nhưng với các dự án của chúng tôi, SSI đã chứng tỏ là một giải pháp đơn giản và cực kỳ ổn định.
 
-The `#include` comment is replaced with the response of `/blue-buy?sku=t_porsche` before the web server sends the complete page to the browser. The configuration in nginx looks like this:
+Comment `#include` được thay thế bằng response của `/blue-buy?sku=t_porsche` trước khi web server gửi toàn bộ trang đến trình duyệt. Cấu hình trong nginx trông như sau:
 
     upstream team_blue {
       server team_blue:3001;
@@ -261,125 +261,125 @@ The `#include` comment is replaced with the response of `/blue-buy?sku=t_porsche
       }
     }
 
-The directive `ssi: on;` enables the SSI feature and an `upstream` and `location` block is added for every team to ensure that all urls which start with `/blue` will be routed to the correct application (`team_blue:3001`). In addition the `/` route is mapped to team red, which is controlling the homepage / product page.
+Chỉ thị `ssi: on;` bật tính năng SSI, và một block `upstream` cùng `location` được thêm cho mỗi team để đảm bảo mọi url bắt đầu bằng `/blue` sẽ được định tuyến tới đúng ứng dụng (`team_blue:3001`). Ngoài ra, route `/` được ánh xạ tới team đỏ, team kiểm soát trang chủ / trang sản phẩm.
 
-This animation shows the tractor store in a browser which has __JavaScript disabled__.
+Animation này cho thấy cửa hàng máy kéo trong một trình duyệt đã __tắt JavaScript__.
 
-[![Server-side Rendering - Disabled JavaScript](./ressources/video/server-render.gif)](./ressources/video/server-render.mp4)
+[![Render phía server - Tắt JavaScript](./ressources/video/server-render.gif)](./ressources/video/server-render.mp4)
 
-[inspect the code](https://github.com/neuland/micro-frontends/tree/master/2-composition-universal)
+[xem code](https://github.com/neuland/micro-frontends/tree/master/2-composition-universal)
 
-The variant selection buttons now are actual links and every click leads to a reload of the page. The terminal on the right illustrates the process of how a request for a page is routed to team red, which controls the product page and after that the markup is supplemented by the fragments from team blue and green.
+Các nút chọn biến thể giờ là các link thực sự và mỗi lần click sẽ tải lại trang. Terminal bên phải minh hoạ quá trình một request cho trang được định tuyến tới team đỏ, team kiểm soát trang sản phẩm, và sau đó markup được bổ sung bởi các fragment từ team xanh dương và xanh lá.
 
-When switching JavaScript back on, only the server log messages for the first request will be visible. All subsequent tractor changes are handled client side, just like in the first example. In a later example the product data will be extracted from the JavaScript and loaded via a REST api as needed.
+Khi bật lại JavaScript, chỉ có log của server cho request đầu tiên được hiển thị. Mọi thay đổi máy kéo tiếp theo được xử lý phía client, giống như ở ví dụ đầu tiên. Trong một ví dụ sau, dữ liệu sản phẩm sẽ được tách khỏi JavaScript và tải qua REST api khi cần.
 
-You can play with this sample code on your local machine. Only [Docker Compose](https://docs.docker.com/compose/install/) needs to be installed.
+Bạn có thể chạy thử code mẫu này trên máy của mình. Chỉ cần cài đặt [Docker Compose](https://docs.docker.com/compose/install/).
 
     git clone https://github.com/neuland/micro-frontends.git
     cd micro-frontends/2-composition-universal
     docker-compose up --build
 
-Docker then starts the nginx on port 3000 and builds the node.js image for each team. When you open [http://127.0.0.1:3000/](http://127.0.0.1:3000/) in your browser you should see a red tractor. The combined log of `docker-compose` makes it easy to see what is going on in the network. Sadly there is no way to control the output color, so you have to endure the fact that team blue might be highlighted in green :)
+Docker sẽ khởi động nginx trên cổng 3000 và build image node.js cho mỗi team. Khi bạn mở [http://127.0.0.1:3000/](http://127.0.0.1:3000/) trên trình duyệt, bạn sẽ thấy một chiếc máy kéo màu đỏ. Log tổng hợp của `docker-compose` giúp dễ dàng theo dõi những gì đang diễn ra trong mạng. Tiếc là không có cách nào kiểm soát màu sắc output, nên bạn phải chịu đựng việc team xanh dương có thể bị tô màu xanh lá :)
 
-The `src` files are mapped into the individual containers and the node application will restart when you make a code change. Changing the `nginx.conf` requires a restart of `docker-compose` in order to have an effect. So feel free to fiddle around and give feedback.
+Các file `src` được ánh xạ vào từng container và ứng dụng node sẽ khởi động lại khi bạn thay đổi code. Thay đổi `nginx.conf` thì cần khởi động lại `docker-compose` mới có hiệu lực. Vì vậy hãy thoải mái vọc và gửi phản hồi.
 
-### Data Fetching & Loading States
+### Lấy dữ liệu & Trạng thái loading {#data-fetching--loading-states}
 
-A downside of the SSI/ESI approach is, that the __slowest fragment determines the response time__ of the whole page.
-So it's good when the response of a fragment can be cached.
-For fragments that are expensive to produce and hard to cache it's often a good idea to exclude them from the initial render.
-They can be loaded asynchronously in the browser.
-In our example the `green-recos` fragment, that shows personalized recommendations is a candidate for this.
+Một nhược điểm của cách tiếp cận SSI/ESI là __fragment chậm nhất sẽ quyết định thời gian phản hồi__ của toàn bộ trang.
+Vì vậy sẽ tốt nếu response của một fragment có thể được cache.
+Với những fragment tốn kém để tạo ra và khó cache, thường nên loại chúng khỏi lần render đầu tiên.
+Chúng có thể được tải bất đồng bộ trên trình duyệt.
+Trong ví dụ của chúng ta, fragment `green-recos` hiển thị gợi ý cá nhân hoá là một ứng viên cho việc này.
 
-One possible solution would be that team red just skips the SSI Include.
+Một giải pháp khả thi là team đỏ chỉ cần bỏ qua SSI Include.
 
-**Before**
+**Trước**
 
     <green-recos sku="t_porsche">
       <!--#include virtual="/green-recos?sku=t_porsche" -->
     </green-recos>
 
-**After**
+**Sau**
 
     <green-recos sku="t_porsche"></green-recos>
 
-*Important Side-note: Custom Elements [cannot be self-closing](https://developers.google.com/web/fundamentals/web-components/customelements), so writing `<green-recos sku="t_porsche" />` would not work correctly.*
+*Lưu ý quan trọng: Custom Elements [không thể tự đóng (self-closing)](https://developers.google.com/web/fundamentals/web-components/customelements), nên viết `<green-recos sku="t_porsche" />` sẽ không hoạt động đúng.*
 
 <img alt="Reflow" src="./ressources/video/data-fetching-reflow.gif" style="width: 500px" loading="lazy" />
 
-The rendering only takes place in the browser.
-But, as can be seen in the animation, this change has now introduced a __substantial reflow__ of the page.
-The recommendation area is initially blank.
-Team greens JavaScript is loaded and executed.
-The API call for fetching the personalized recommendation is made.
-The recommendation markup is rendered and the associated images are requested.
-The fragment now needs more space and pushes the layout of the page.
+Việc render chỉ diễn ra trên trình duyệt.
+Nhưng như có thể thấy trong animation, thay đổi này đã gây ra __reflow đáng kể__ cho trang.
+Khu vực gợi ý ban đầu trống trơn.
+JavaScript của team xanh lá được tải và thực thi.
+API call để lấy gợi ý cá nhân hoá được thực hiện.
+Markup gợi ý được render và các hình ảnh liên quan được request.
+Fragment giờ cần nhiều không gian hơn và đẩy layout của trang.
 
-There are different options to avoid an annoying reflow like this.
-Team red, which controls the page, could __fixate the recommendation containers height__.
-On a responsive website its often tricky to determine the height, because it could differ for different screen sizes.
-But the more important issue is, that __this kind of inter-team agreement creates a tight coupling__ between team red and green.
-If team green wants to introduce an additional sub-headline in the reco element, it would have to coordinate with team red on the new height.
-Both teams would have to rollout their changes simultaneously to avoid a broken layout.
+Có nhiều cách khác nhau để tránh một reflow khó chịu như vậy.
+Team đỏ, team kiểm soát trang, có thể __cố định chiều cao của container gợi ý__.
+Trên một trang web responsive, thường khó xác định chiều cao vì nó có thể khác nhau tuỳ kích thước màn hình.
+Nhưng vấn đề quan trọng hơn là __kiểu thoả thuận giữa các team này tạo ra sự phụ thuộc chặt chẽ (tight coupling)__ giữa team đỏ và xanh lá.
+Nếu team xanh lá muốn thêm một tiêu đề phụ vào element gợi ý, họ sẽ phải phối hợp với team đỏ về chiều cao mới.
+Cả hai team sẽ phải triển khai thay đổi cùng lúc để tránh vỡ layout.
 
-A better way is to use a technique called [Skeleton Screens](https://blog.prototypr.io/luke-wroblewski-introduced-skeleton-screens-in-2013-through-his-work-on-the-polar-app-later-fd1d32a6a8e7).
-Team red leaves the `green-recos` SSI Include in the markup.
-In addition team green changes the __server-side render method__ of its fragment so that it produces a __schematic version of the content__.
-The __skeleton markup__ can reuse parts of the real content's layout styles.
-This way it __reserves the needed space__ and the fill-in of the actual content does not lead to a jump.
+Một cách tốt hơn là sử dụng kỹ thuật gọi là [Skeleton Screens](https://blog.prototypr.io/luke-wroblewski-introduced-skeleton-screens-in-2013-through-his-work-on-the-polar-app-later-fd1d32a6a8e7).
+Team đỏ giữ nguyên SSI Include của `green-recos` trong markup.
+Ngoài ra, team xanh lá thay đổi __phương thức render phía server__ của fragment để nó tạo ra __một phiên bản phác thảo của nội dung__.
+__Skeleton markup__ có thể tái sử dụng một phần style layout của nội dung thật.
+Bằng cách này nó __giữ trước không gian cần thiết__ và việc điền nội dung thực tế sẽ không gây ra hiện tượng nhảy layout.
 
 <img alt="Skeleton Screen" src="./ressources/video/data-fetching-skeleton.gif" style="width: 500px" loading="lazy" />
 
-Skeleton screens are also __very useful for client rendering__.
-When your custom element is inserted into the DOM due to a user action it could __instantly render the skeleton__ until the data it needs from the server has arrived.
+Skeleton screen cũng __rất hữu ích cho render phía client__.
+Khi custom element của bạn được chèn vào DOM do hành động của người dùng, nó có thể __render skeleton ngay lập tức__ cho đến khi dữ liệu cần thiết từ server về tới.
 
-Even on an __attribute change__ like for the _variant select_ you can decide to switch to skeleton view until the new data arrives.
-This ways the user gets an indication that something is going on in the fragment.
-But when your endpoint responds quickly a short __skeleton flicker__ between the old and new data could also be annoying.
-Preserving the old data or using intelligent timeouts can help.
-So use this technique wisely and try to get user feedback.
+Ngay cả khi __thay đổi thuộc tính__ như với _bộ chọn biến thể_, bạn cũng có thể quyết định chuyển sang chế độ skeleton cho đến khi dữ liệu mới về.
+Bằng cách này người dùng nhận được tín hiệu rằng có điều gì đó đang diễn ra trong fragment.
+Nhưng khi endpoint của bạn phản hồi nhanh, một __cú nháy skeleton__ ngắn giữa dữ liệu cũ và mới cũng có thể gây khó chịu.
+Giữ lại dữ liệu cũ hoặc sử dụng timeout thông minh có thể giúp ích.
+Vì vậy hãy dùng kỹ thuật này một cách khôn ngoan và cố gắng thu thập phản hồi từ người dùng.
 
-## Need More Examples?
+## Cần thêm ví dụ? {#need-more-examples}
 
 
-<a href="/tractor-store/">
+<a href="https://micro-frontends.org/tractor-store/">
 <img alt="Tractor Store 2.0" src="./ressources/video/tractor-store-2.webp" style="width: 500px" loading="lazy" />
 </a>
 
-[Check out the Tractor Store 2.0](/tractor-store/)
+[Khám phá Tractor Store 2.0](https://micro-frontends.org/tractor-store/)
 
-It's a more real-world micro frontends example that includes challenges like __routing & navigation__, __communication__, __handling state__, __loading strategies__, __sharing code__, __asset optimizations__ and __testing__.
-The site is a collection of different tech-specific implementations of the same application.
-Think of it as a [TodoMVC](http://todomvc.com/) for micro frontends.
+Đây là một ví dụ micro frontends sát với thực tế hơn, bao gồm các thách thức như __routing & điều hướng__, __giao tiếp__, __quản lý state__, __chiến lược tải__, __chia sẻ code__, __tối ưu tài nguyên__ và __testing__.
+Trang này là tập hợp các bản triển khai bằng những công nghệ khác nhau cho cùng một ứng dụng.
+Hãy coi nó như [TodoMVC](http://todomvc.com/) dành cho micro frontends.
 
 
 
-## Additional Resources
-- [Book: Micro Frontends in Action](https://www.manning.com/books/micro-frontends-in-action?a_aid=mfia&a_bid=5f09fdeb) Written by me.
+## Tài liệu tham khảo thêm {#additional-resources}
+- [Sách: Micro Frontends in Action](https://www.manning.com/books/micro-frontends-in-action?a_aid=mfia&a_bid=5f09fdeb) Do chính tôi viết.
 - [Talk: Micro Frontends - MicroCPH, Copenhagen 2019](https://www.youtube.com/watch?v=wCHYILvM7kU) ([Slides](https://noti.st/naltatis/zQb2m5/micro-frontends-the-nitty-gritty-details-or-frontend-backend-happyend)) The Nitty Gritty Details or Frontend, Backend, 🌈 Happyend
 - [Talk: Micro Frontends - Web Rebels, Oslo 2018](https://www.youtube.com/watch?v=dTW7eJsIHDg) ([Slides](https://noti.st/naltatis/HxcUfZ/micro-frontends-think-smaller-avoid-the-monolith-love-the-backend)) Think Smaller, Avoid the Monolith, ❤️the Backend
 - [Slides: Micro Frontends - JSUnconf.eu 2017](https://speakerdeck.com/naltatis/micro-frontends-building-a-modern-webapp-with-multiple-teams)
-- [Talk: Break Up With Your Frontend Monolith - JS Kongress 2017](https://www.youtube.com/watch?v=W3_8sxUurzA) Elisabeth Engel talks about implementing Micro Frontends at gutefrage.net
-- [Article: Micro Frontends](https://martinfowler.com/articles/micro-frontends.html) Article by Cam Jackson on Martin Fowlers Blog
-- [Post: Micro frontends - a microservice approach to front-end web development](https://medium.com/@tomsoderlund/micro-frontends-a-microservice-approach-to-front-end-web-development-f325ebdadc16) Tom Söderlund explains the core concept and provides links on this topic
-- [Post: Microservices to Micro-Frontends](http://www.agilechamps.com/microservices-to-micro-frontends/) Sandeep Jain summarizes the key principals behind microservices and micro frontends
-- [Link Collection: Micro Frontends by Elisabeth Engel](https://micro-frontends.zeef.com/elisabeth.engel?ref=elisabeth.engel&share=ee53d51a914b4951ae5c94ece97642fc) extensive list of posts, talks, tools and other resources on this topic
-- [Awesome Micro Frontends](https://github.com/ChristianUlbrich/awesome-microfrontends) a curated list of links by Christian Ulbrich 🕶
-- [Custom Elements Everywhere](https://custom-elements-everywhere.com/) Making sure frameworks and custom elements can be BFFs
-- Tractors are purchasable at [manufactum.com](https://www.manufactum.com/) :)<br>_This store is developed by two teams using the here described techniques._
+- [Talk: Break Up With Your Frontend Monolith - JS Kongress 2017](https://www.youtube.com/watch?v=W3_8sxUurzA) Elisabeth Engel nói về việc triển khai Micro Frontends tại gutefrage.net
+- [Bài viết: Micro Frontends](https://martinfowler.com/articles/micro-frontends.html) Bài viết của Cam Jackson trên blog của Martin Fowler
+- [Bài viết: Micro frontends - a microservice approach to front-end web development](https://medium.com/@tomsoderlund/micro-frontends-a-microservice-approach-to-front-end-web-development-f325ebdadc16) Tom Söderlund giải thích khái niệm cốt lõi và cung cấp các link về chủ đề này
+- [Bài viết: Microservices to Micro-Frontends](http://www.agilechamps.com/microservices-to-micro-frontends/) Sandeep Jain tóm tắt các nguyên tắc chính đằng sau microservices và micro frontends
+- [Tổng hợp link: Micro Frontends by Elisabeth Engel](https://micro-frontends.zeef.com/elisabeth.engel?ref=elisabeth.engel&share=ee53d51a914b4951ae5c94ece97642fc) danh sách phong phú các bài viết, talk, công cụ và tài nguyên khác về chủ đề này
+- [Awesome Micro Frontends](https://github.com/ChristianUlbrich/awesome-microfrontends) danh sách link được tuyển chọn bởi Christian Ulbrich 🕶
+- [Custom Elements Everywhere](https://custom-elements-everywhere.com/) Đảm bảo các framework và custom elements có thể làm bạn thân của nhau
+- Máy kéo có thể mua tại [manufactum.com](https://www.manufactum.com/) :)<br>_Cửa hàng này được phát triển bởi hai team sử dụng các kỹ thuật được mô tả ở đây._
 
 
-## Contributors
-- [Koike Takayuki](https://github.com/koiketakayuki) who translated the site to [Japanese](https://micro-frontends-japanese.org/).
-- [Jorge Beltrán](https://github.com/scipion) who translated the site to [Spanish](https://micro-frontends-es.org).
-- [Bruno Carneiro](https://github.com/Tautorn) who translated the site to [Portuguese](https://tautorn.github.io/micro-frontends/).
-- [Soobin Bak](https://github.com/soobing) who translated the site to [Korean](https://soobing.github.io/micro-frontends/).
-- [Sergei Babin](https://github.com/serzn1) who translated the site to [Russian](https://serzn1.github.io/micro-frontends/).
-- [Shiwei Yang](https://github.com/swearer23) who translated the site to [Chinese](https://swearer23.github.io/micro-frontends/).
-- [Riccardo Moschetti](https://github.com/RiccardoGMoschetti) who translated the site to [Italian](https://riccardogmoschetti.github.io/micro-frontends/).
-- [Dominik Czechowski](https://github.com/dominikcz) who translated the site to [Polish](https://dominikcz.github.io/micro-frontends/).
-- [John Adib](https://github.com/johnadib) who translated the site to [Persian](https://johnadib.github.io/micro-frontends/).
-- [Mehmet Mutlu](https://github.com/mhmtmutlu) who translated the site to [Turkish](https://mhmtmutlu.github.io/micro-frontends/).
+## Người đóng góp {#contributors}
+- [Koike Takayuki](https://github.com/koiketakayuki) dịch trang sang [tiếng Nhật](https://micro-frontends-japanese.org/).
+- [Jorge Beltrán](https://github.com/scipion) dịch trang sang [tiếng Tây Ban Nha](https://micro-frontends-es.org).
+- [Bruno Carneiro](https://github.com/Tautorn) dịch trang sang [tiếng Bồ Đào Nha](https://tautorn.github.io/micro-frontends/).
+- [Soobin Bak](https://github.com/soobing) dịch trang sang [tiếng Hàn](https://soobing.github.io/micro-frontends/).
+- [Sergei Babin](https://github.com/serzn1) dịch trang sang [tiếng Nga](https://serzn1.github.io/micro-frontends/).
+- [Shiwei Yang](https://github.com/swearer23) dịch trang sang [tiếng Trung](https://swearer23.github.io/micro-frontends/).
+- [Riccardo Moschetti](https://github.com/RiccardoGMoschetti) dịch trang sang [tiếng Ý](https://riccardogmoschetti.github.io/micro-frontends/).
+- [Dominik Czechowski](https://github.com/dominikcz) dịch trang sang [tiếng Ba Lan](https://dominikcz.github.io/micro-frontends/).
+- [John Adib](https://github.com/johnadib) dịch trang sang [tiếng Ba Tư](https://johnadib.github.io/micro-frontends/).
+- [Mehmet Mutlu](https://github.com/mhmtmutlu) dịch trang sang [tiếng Thổ Nhĩ Kỳ](https://mhmtmutlu.github.io/micro-frontends/).
 
 
-This site is generated by Github Pages. Its source can be found at [neuland/micro-frontends](https://github.com/neuland/micro-frontends/).
+Trang này được tạo bởi Github Pages. Bản gốc tiếng Anh có tại [micro-frontends.org](https://micro-frontends.org/), mã nguồn tại [neuland/micro-frontends](https://github.com/neuland/micro-frontends/).
