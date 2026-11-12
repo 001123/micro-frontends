@@ -380,6 +380,7 @@ Hãy coi nó như [TodoMVC](http://todomvc.com/) dành cho micro frontends.
 - [Dominik Czechowski](https://github.com/dominikcz) dịch trang sang [tiếng Ba Lan](https://dominikcz.github.io/micro-frontends/).
 - [John Adib](https://github.com/johnadib) dịch trang sang [tiếng Ba Tư](https://johnadib.github.io/micro-frontends/).
 - [Mehmet Mutlu](https://github.com/mhmtmutlu) dịch trang sang [tiếng Thổ Nhĩ Kỳ](https://mhmtmutlu.github.io/micro-frontends/).
+- [Bui Khuong Duy](https://github.com/001123) dịch trang sang [tiếng Việt](https://001123.github.io/micro-frontends/).
 
 
 Trang này được tạo bởi Github Pages. Bản gốc tiếng Anh có tại [micro-frontends.org](https://micro-frontends.org/), mã nguồn tại [neuland/micro-frontends](https://github.com/neuland/micro-frontends/).
